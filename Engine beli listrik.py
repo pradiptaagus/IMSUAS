@@ -7,8 +7,20 @@
 # ============================================
 
 # Todo import library
+import pymysql
+import time
+import json
+import dropbox
+import pathlib
+import re
+from prettytable import PrettyTable
+
 # Todo membuat function
 # pisahkan masing-masing proses dengan membuat function
+
+# function untuk menambahkan log insert ke file json dari tabel transaksi
+def insertJson(id_transaksi, ):
+	pass
 
 
 # Todo membuat koneksi
