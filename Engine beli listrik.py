@@ -204,42 +204,50 @@ def cekIUD(transaksi):
 	if transaksi == 'indomaret':
         #DownlaodJsonToko()
         # Cek Pembahruan dalam JSON file database bank
-        with open('pln.json', 'r', encoding='utf-8') as report:
-            try:
-                data_json = json.load(report)
-            except:
-                data_json = []
-        jumlah_data_json = len(data_json)
-    elif transaksi == 'pln':
+		with open('File JSON/pln.json', 'r', encoding='utf-8') as report:
+			try:
+				data_json = json.load(report)
+			except:
+				data_json = []
+		jumlah_data_json = len(data_json)
+	elif transaksi == 'pln':
         #DownlaodJsonBank()
         # Cek Pembahruan dalam JSON file database toko
-        with open('indomaret.json', 'r', encoding='utf-8') as report:
-            try:
-                data_json = json.load(report)
-            except:
-                data_json = []
-        jumlah_data_json = len(data_json)
+		with open('File JSON/indomaret.json', 'r', encoding='utf-8') as report:
+			try:
+				data_json = json.load(report)
+			except:
+				data_json = []
+		jumlah_data_json = len(data_json)
 	
 	if (data_json is None) == False:
-        for i in range(jumlah_data_json):
+		for i in range(jumlah_data_json):
             # memasukkan status action dan status perintah apakah belum atau sudah dijalankan
-            action = data_json[i]['action']
-            run = data_json[i]['run']
+			action = data_json[i]['action']
+			run = data_json[i]['run']
 
             # memasukkan nilai pada json ke variabel
-            id_json = int(data_json[i]['id'])
-            no_rek_json = data_json[i]['no_rek']
-            atas_nama_json = data_json[i]['atas_nama']
-            jumlah_json = int(data_json[i]['jumlah'])
-            kode_unik_json = data_json[i]['kode_unik']
-            status_json = data_json[i]['status']
-            tanggal_json = data_json[i]['tanggal']
+			id_json = int(data_json[i]['id_transaksi'])
+            # no_rek_json = data_json[i]['no_rek']
+            # atas_nama_json = data_json[i]['atas_nama']
+            # jumlah_json = int(data_json[i]['jumlah'])
+            # kode_unik_json = data_json[i]['kode_unik']
+            # status_json = data_json[i]['status']
+            # tanggal_json = data_json[i]['tanggal']
 
-            # Todo cek update dari tabel transaksi PLN atau Indomaret
-            if action == 'update' and run == '0':
-                for a in range(jumlah_data_temp):
-                    if id_json == data_temp[a][0]:
-						
+			# Todo cek update dari tabel transaksi PLN atau Indomaret
+			if action == 'insert' and run == '0':
+				for a in range(jumlah_data_temp):
+					if id_json == data_temp[a][0]:
+						isi_data_json = data_json[i]['id_pelanggan'] + ' ' + data_json[i]['no_token'] + ' ' + data_json[i]['id_strom'] + ' ' + data_json[i]['waktu_pembelian']
+						print(isi_data_json)
+
+						sql = "SELECT CONCAT(id_pelanggan, ' ', no_token, ' ', id_strom, ' ', waktu_pembelian) AS data_pln_temp FROM tb_transaksi_temp WHERE tb_transaksi_temp.id_transaksi = %s"  % data_temp[a][0]
+						cur.execute(sql)
+						record_temp = cur.fetchone()
+						str_record_temp =''.join(record_temp)
+						print(str_record_temp)
+
     
 	
 
