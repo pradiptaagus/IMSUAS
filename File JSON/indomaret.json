@@ -1,0 +1,11 @@
+[
+    {
+        "id_transaksi": "1",
+        "id_pelanggan": "1",
+        "no_token": "4354636",
+        "id_strom": "1",
+        "waktu_pembelian": "2018-06-02 16:25:59",
+        "action": "insert",
+        "run": "0"
+    }
+]

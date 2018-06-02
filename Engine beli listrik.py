@@ -16,13 +16,16 @@ import re
 import requests
 from prettytable import PrettyTable
 
+# Todo menentukan delay dari engine dengan meminta input dari user
+delay = int(input("Masukkan waktu delay: "))
+
 # Todo membuat function
 # pisahkan masing-masing proses dengan membuat function
 
 # function untuk menambahkan log insert ke file json dari tabel transaksi
 # function ini dapat digunakan untuk menambahkan log insert, update, delete ke file json dari PLN maupun Indomaret
 # Gunakan function ini saja untuk menghemat penulisan code
-def insertJson(id_transaksi, id_pelanggan, no_token, jumlah_strom, jumlah_pembayaran, waktu_pembelian, nama_file_json, action, run):
+def insertJson(id_transaksi, id_pelanggan, no_token, id_strom, waktu_pembelian, nama_file_json, action, run):
 	list_data = []
 	# read file json
 	with open('File JSON/' + nama_file_json, 'r', encoding='utf-8') as file:
@@ -31,12 +34,12 @@ def insertJson(id_transaksi, id_pelanggan, no_token, jumlah_strom, jumlah_pembay
 		except:
 			data = []
 	# menambahkan record baru ke variabel temporary
-	new_entry = {'id_transaksi': str(id_transaksi), 'id_pelanggan': str(id_pelanggan), 'no_token': no_token, 'jumlah_strom': str(jumlah_strom), 
-				 'jumlah_pembayaran': jumlah_pembayaran, 'waktu_pembelian': waktu_pembelian, 'action': action, 'run': run}
+	new_entry = {'id_transaksi': str(id_transaksi), 'id_pelanggan': str(id_pelanggan), 'no_token': no_token, 'id_strom': str(id_strom), 
+				 'waktu_pembelian': str(waktu_pembelian), 'action': action, 'run': run}
 	# append record baru ke variabel array
 	list_data.append(new_entry)
 	# menyimpan record baru ke file json
-	with open('File JSON/' + nama_file_json, 'r', encoding='utf-8')as file:
+	with open('File JSON/' + nama_file_json, 'w', encoding='utf-8')as file:
 		json.dump(data + list_data, file, indent=4)
 
 
@@ -65,150 +68,208 @@ def downloadJson(target_file, local_file):
 		file.write(r.content)
 	print(local_file + "berhasil diunuduh")
 
+# function untuk insert , update delete pada tabel transaksi 
+# function ini dapat digunakan untuk mengubah tabel transaksi dan tabel temporary
+#  dari PLN maupun Indomaret
+# Gunakan function ini saja untuk menghemat penulisan code , cur, db
+def cekIUD(transaksi):
+	if  transaksi == 'indomaret':
+		# Todo membuat koneksi
+		con = pymysql.connect(host = "localhost", user = "root", passwd = "", db = "db_indomaret")
+		
+		# Todo membuat cursor
+		cur = con.cursor()
 
+		# Todo select semua data dari tabel transaksi PLN dan Indomaret
+		# Select data dari tabel tb_transaksi Indomaret
+		cur.execute("SELECT * FROM tb_transaksi")
+		data = cur.fetchall()
+		
+		# Select data dari tabel tb_transaksi_temp Indomaret
+		cur.execute("SELECT * FROM tb_transaksi_temp")
+		data_temp = cur.fetchall()
+		
+
+		# Todo Menghitung banyak data dari tabel transaksi Indomaret
+		jumlah_data = len(data)
+
+		# Todo menghitung banyak data dari tabel transaksi temporary Indomaret
+		jumlah_data_temp = len(data_temp)
+
+	elif  transaksi == 'pln':
+		# Todo membuat koneksi
+		con = pymysql.connect(host = "localhost", user = "root", passwd = "", db = "db_pln")
+
+		# Todo membuat cursor
+		cur = con.cursor()
+		
+		# Todo select semua data dari tabel transaksi PLN dan Indomaret
+		# Select data dari tabel tb_transaksi PLN
+		cur.execute("SELECT * FROM tb_transaksi")
+		data = cur.fetchall()
+		
+		# Select data dari tabel tb_transaksi_temp PLN
+		cur.execute("SELECT * FROM tb_transaksi_temp")
+		data_temp = cur.fetchall()
+
+		# Todo Menghitung banyak data dari tabel transaksi PLN dan Indomaret
+		jumlah_data = len(data)
+
+		# Todo menghitung banyak data dari tabel transaksi temporary PLN dan Indomaret
+		jumlah_data_temp = len(data_temp)
+
+	# Todo cek update dari tabel transaksi PLN
+	if jumlah_data == jumlah_data_temp:
+		print("Cek update pada tabel transaksi " + transaksi + "..")
+		for i in range(0, jumlah_data):
+			# Melakukan select concat pada tabel transaksi PLN
+			sql = "SELECT CONCAT(id_transaksi, ' ', id_pelanggan, ' ', no_token, ' ', id_strom, ' ', waktu_pembelian, ' ') AS data_pln FROM tb_transaksi WHERE tb_transaksi.id_transaksi = %s"  % i
+			cur.execute(sql)
+			record = cur.fetchone()
+
+			# Melakukan select concat pada tabel transaksi temp PLN
+			sql = "SELECT CONCAT(id_transaksi, ' ', id_pelanggan, ' ', no_token, ' ', id_strom, ' ', waktu_pembelian, ' ') AS data_pln_temp FROM tb_transaksi_temp WHERE tb_transaksi_temp.id_transaksi = %s"  % i
+			cur.execute(sql)
+			record_temp = cur.fetchone()
+
+			if record != record_temp:
+				# print notifikasi
+				print("Terjadi update data pada tb_transaksi " + transaksi + "..")
+				t = PrettyTable(['id_transaksi', 'id_pelanggan', 'no_token', 'id_strom', 'waktu_pembelian'])
+				t.add_row([data[i][0], data[i][1], data[i][2], data[i][3], data[i][4]])
+				print(t)
+				
+				sql = "UPDATE tb_transaksi_temp SET tb_transaksi_temp.id_pelanggan = %s, tb_transaksi_temp.no_token = '%s', tb_transaksi_temp.id_strom = %s, tb_transaksi_temp.waktu_pembelian = '%s' WHERE tb_transaksi_temp.id_transaksi = %s" %(
+						  data[i][1], data[i][2], data[i][3], data[i][4], data_temp[i][0]
+					  )
+				cur.execute(sql)
+				con.commit()
+
+				if transaksi == 'indomaret':
+					# Memasukkan perubahan ke file json
+					insertJson(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], 'indomaret.json', 'update', '0')
+				elif  transaksi == 'pln':
+					# Memasukkan perubahan ke file json
+					insertJson(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], 'pln.json', 'update', '0')
+
+
+	# Todo cek insert dari tabel transaksi PLN
+	if jumlah_data > jumlah_data_temp:
+		print("Cek insert pada tabel transaksi " + transaksi + "..")
+		for i in range(jumlah_data_temp, jumlah_data):
+			sql = "INSERT INTO tb_transaksi_temp(id_pelanggan, no_token, id_strom, waktu_pembelian) VALUES(%s, '%s', %s, '%s')" % (
+				data[i][1], data[i][2], data[i][3], data[i][4])
+			cur.execute(sql)
+			con.commit()
+
+			# print notifikasi
+			print("Terjadi insert data pada tb_transaksi " + transaksi + "..")
+			t = PrettyTable(['id_transaksi', 'id_pelanggan', 'no_token', 'id_strom', 'waktu_pembelian'])
+			t.add_row([data[i][0], data[i][1], data[i][2], data[i][3], data[i][4]])
+			print(t)
+
+		if transaksi == 'indomaret':
+			# Memasukkan perubahan ke file json
+			insertJson(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], 'indomaret.json', 'insert', '0')
+		elif  transaksi == 'pln':
+			# Memasukkan perubahan ke file json
+			insertJson(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], 'pln.json', 'insert', '0')
+
+
+	# Todo cek delete dari tabel transaksi PLN
+	if jumlah_data < jumlah_data_temp:
+		print("Cek delete pada tabel transaksi " + transaksi + "..")
+		for i in range(0, jumlah_data_temp):
+			cur.execute("SELECT * FROM tb_transaksi WHERE tb_transaksi.id_transaksi = %s" % data_temp[i][0])
+			record = cur.fetchone()
+			if record is None == True:
+				# print notifikasi
+				print("Terjadi delete data pada tabel transaksi " + transaksi + "..")
+				t = PrettyTable(['id_transaksi'])
+				t.add_row([data_temp[i][0]])
+				print(t)
+
+				if transaksi == 'indomaret':
+					# Memasukkan perubahan ke file json
+					insertJson(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], 'indomaret.json', 'delete', '0')
+				if transaksi == 'pln':
+					# Memasukkan perubahan ke file json
+					insertJson(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], 'pln.json', 'delete', '0')
+	
+	# ============================================
+	# Mulai proses 
+	# ============================================
+	# Cek file JSON PLN atau Indomaret
+	# ============================================
+	if transaksi == 'indomaret':
+        #DownlaodJsonToko()
+        # Cek Pembahruan dalam JSON file database bank
+        with open('pln.json', 'r', encoding='utf-8') as report:
+            try:
+                data_json = json.load(report)
+            except:
+                data_json = []
+        jumlah_data_json = len(data_json)
+    elif transaksi == 'pln':
+        #DownlaodJsonBank()
+        # Cek Pembahruan dalam JSON file database toko
+        with open('indomaret.json', 'r', encoding='utf-8') as report:
+            try:
+                data_json = json.load(report)
+            except:
+                data_json = []
+        jumlah_data_json = len(data_json)
+	
+	if (data_json is None) == False:
+        for i in range(jumlah_data_json):
+            # memasukkan status action dan status perintah apakah belum atau sudah dijalankan
+            action = data_json[i]['action']
+            run = data_json[i]['run']
+
+            # memasukkan nilai pada json ke variabel
+            id_json = int(data_json[i]['id'])
+            no_rek_json = data_json[i]['no_rek']
+            atas_nama_json = data_json[i]['atas_nama']
+            jumlah_json = int(data_json[i]['jumlah'])
+            kode_unik_json = data_json[i]['kode_unik']
+            status_json = data_json[i]['status']
+            tanggal_json = data_json[i]['tanggal']
+
+            # Todo cek update dari tabel transaksi PLN atau Indomaret
+            if action == 'update' and run == '0':
+                for a in range(jumlah_data_temp):
+                    if id_json == data_temp[a][0]:
+						
+    
+	
+
+
+	# Todo cek insert dari tabel transaksi PLN atau Indomaret
+
+
+	# Todo cek delete dari tabel transaksi PLN atau Indomaret
+
+
+	con.close()
 # function main
 def main():
-	# Todo membuat koneksi
-	con_pln = pymysql.connect(host = "localhost", user = "root", passwd = "", db = "db_pln")
-	con_indomaret = pymysql.connect(host = "localhost", user = "root", passwd = "", db = "db_indomaret")
 	
-
-	# Todo membuat cursor
-	cur_pln = con_pln.cursor()
-	cur_indomaret = con_indomaret.cursor()
-
-
-	# Todo select semua data dari tabel transaksi PLN dan Indomaret
-	# Select data dari tabel tb_transaksi PLN
-	cur_pln.execute("SELECT * FROM tb_transaksi")
-	data_pln = cur_pln.fetchall()
-	
-	# Select data dari tabel tb_transaksi Indomaret
-	cur_indomaret.execute("SELECT * FROM tb_transaksi")
-	data_indomaret = cur_indomaret.fetchall()
-
-	# Select data dari tabel tb_transaksi_temp PLN
-	cur_pln.execute("SELECT * FROM tb_transaksi_temp")
-	data_pln_temp = cur_pln.fetchall()
-	
-	# Select data dari tabel tb_transaksi_temp Indomaret
-	cur_indomaret.execute("SELECT * FROM tb_transaksi_temp")
-	data_indomaret_temp = cur_indomaret.fetchall()
-	
-
-	# Todo Menghitung banyak data dari tabel transaksi PLN dan Indomaret
-	jumlah_data_pln = len(data_pln)
-	jumlah_data_indomaret = len(data_indomaret)
-
-	# Todo menghitung banyak data dari tabel transaksi temporary PLN dan Indomaret
-	jumlah_data_pln_temp = len(data_pln_temp)
-	jumlah_data_indomaret_temp = len(data_indomaret_temp)
-
 	# ============================================
 	# Mulai proses 
 	# ============================================
 	# Cek tabel transaksi PLN
 	# ============================================
-
-	# Todo cek update dari tabel transaksi PLN
-	if jumlah_data_pln == jumlah_data_pln_temp:
-		print("Cek update pada tabel transaksi PLN..")
-		for i in range(0, jumlah_data_pln):
-			# Melakukan select concat pada tabel transaksi PLN
-			sql = "SELECT CONCAT(id_transaksi, ' ', id_pelanggan, ' ', no_token, ' ', jumlah_strom, ' ', jumlah_pembayaran, ' ', waktu_pembelian, ' ') AS data_pln FROM tb_transaksi WHERE tb_transaksi.id_transaksi = %s"  % i
-			cur_pln.execute(sql)
-			record_pln = cur_pln.fetchone()
-
-
-			# Melakukan select concat pada tabel transaksi temp PLN
-			sql = "SELECT CONCAT(id_transaksi, ' ', id_pelanggan, ' ', no_token, ' ', jumlah_strom, ' ', jumlah_pembayaran, ' ', waktu_pembelian, ' ') AS data_pln_temp FROM tb_transaksi_temp WHERE tb_transaksi_temp.id_transaksi = %s"  % i
-			cur_pln.execute(sql)
-			record_pln_temp = cur_pln.fetchone()
-
-			if record_pln != record_pln_temp:
-				# print notifikasi
-				print("Terjadi update data pada tb_transaksi PLN..")
-				t = PrettyTable(['id_transaksi', 'no_rek old', 'no_rek new'])
-				t.add_row([data_pln[i][0], data_pln_temp[i][1], data_pln[i][1]])
-				print(t)
-				
-				sql = "UPDATE tb_transaksi_temp SET tb_transaksi_temp.id_pelanggan = %s, tb_transaksi_temp.no_token = '%s', tb_transaksi_temp.jumlah_strom = %s, tb_transaksi_temp.jumlah_pembayaran = '%s', tb_transaksi_temp.waktu_pembelian = '%s' WHERE tb_transaksi_temp.id_transaksi = %s" %(
-						  data_pln[i][1], data_pln[i][2], data_pln[i][3], data_pln[i][4], data_pln[i][5], data_pln_temp[i][0]
-					  )
-				cur_pln.execute(sql)
-				con_pln.commit()
-
-				# Memasukkan perubahan ke file json
-				insertJson(data_pln[i][0], data_pln[i][1], data_pln[i][2], data_pln[i][3], data_pln[i][4], data_pln[i][5], 'pln.json', 'update', '0')
-
-
-	# Todo cek insert dari tabel transaksi PLN
-	if jumlah_data_pln > jumlah_data_pln_temp:
-		print("Cek insert pada tabel transaksi PLN..")
-		for i in range(jumlah_data_pln_temp, jumlah_data_pln):
-			sql = "INSERT INTO tb_transaksi_temp(id_pelanggan, no_token, jumlah_strom, jumlah_pembayaran, waktu_pembelian) VALUES(%s, '%s', %s, '%s', '%s')" % (
-				data_pln[i][1], data_pln[i][2], data_pln[i][3], data_pln[i][4], data_pln[i][5])
-			cur_pln.execute(sql)
-			con_pln.commit()
-
-			# print notifikasi
-			print("Terjadi insert data pada tb_transaksi PLN..")
-			t = PrettyTable(['id_transaksi', 'id_pelanggan', 'no_token', 'jumlah_strom', 'jumlah_pembayaran', 'waktu_pembelian'])
-			t.add_row([data_pln[i][0], data_pln[i][1], data_pln[i][2], data_pln[i][3], data_pln[i][4], data_pln[i][5]])
-			print(t)
-		
-		# Memasukkan perubahan ke file json
-		insertJson(data_pln[i][0], data_pln[i][1], data_pln[i][2], data_pln[i][3], data_pln[i][4], data_pln[i][5], 'pln.json', 'insert', '0')
-
-
-	# Todo cek delete dari tabel transaksi PLN
-	if jumlah_data_pln < jumlah_data_pln_temp:
-		print("Cek delete pada tabel transaksi PLN")
-		for i in range(0, jumlah_data_pln_temp):
-			cur_pln.execute("SELECT * FROM tb_transaksi WHERE tb_transaksi.id_transaksi = %s" % data_pln_temp[i][0])
-			record_pln = cur_pln.fetchone()
-			if record_pln is None == True:
-				# print notifikasi
-				print("Cek delete pada tabel transaksi PLN..")
-				print("Terjadi delete data pada tabel transaksi PLN..")
-				t = PrettyTable(['id_transaksi'])
-				t.add_row([data_pln_temp[i][0]])
-				print(t)
-
-				# Memasukkan perubahan ke file json
-				insertJson(data_pln[i][0], data_pln[i][1], data_pln[i][2], data_pln[i][3], data_pln[i][4], data_pln[i][5], 'pln.json', 'delete', '0')
-				
-				
+	cekIUD('pln')	
+	time.sleep(delay)
 	# ============================================
 	# Mulai proses 
 	# ============================================
 	# Cek tabel transaksi Indomaret
 	# ============================================
+	cekIUD('indomaret')
+	time.sleep(delay)
 
-	# Todo cek update dari tabel transaksi PLN
-
-
-	# Todo cek insert dari tabel transaksi PLN
-
-
-	# Todo cek delete dari tabel transaksi PLN
-
-
-	# ============================================
-	# Mulai proses 
-	# ============================================
-	# Cek file JSON PLN
-	# ============================================
-
-	# Todo cek update dari tabel transaksi PLN
-
-
-	# Todo cek insert dari tabel transaksi PLN
-
-
-	# Todo cek delete dari tabel transaksi PLN
-
-
+	
 	# ============================================
 	# Mulai proses 
 	# ============================================
@@ -226,6 +287,5 @@ def main():
 
 # Todo melakukan infinity loop
 while True:
-	# Todo menentukan delay dari engine dengan meminta input dari user
-	delay = int(input("Masukkan waktu delay: "))
 	# Todo memanggil fungsi main
+	main()
