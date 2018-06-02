@@ -65,13 +65,13 @@ CREATE TABLE `tb_transaksi` (
   `id_pelanggan` int(11) NOT NULL,
   `no_token` varchar(25) NOT NULL,
   `id_strom` int(11) NOT NULL,
+  `jumlah_strom` int(11) NOT NULL,
+  `jumlah_pembayaran` int(11) NOT NULL,
   `waktu_pembelian` datetime NOT NULL,
   PRIMARY KEY (`id_transaksi`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_transaksi` */
-
-insert  into `tb_transaksi`(`id_transaksi`,`id_pelanggan`,`no_token`,`id_strom`,`waktu_pembelian`) values (1,1,'367542354',1,'2018-06-02 16:26:38');
 
 /*Table structure for table `tb_transaksi_temp` */
 
@@ -82,13 +82,13 @@ CREATE TABLE `tb_transaksi_temp` (
   `id_pelanggan` int(11) NOT NULL,
   `no_token` varchar(25) NOT NULL,
   `id_strom` int(11) NOT NULL,
+  `jumlah_strom` int(11) NOT NULL,
+  `jumlah_pembayaran` int(11) NOT NULL,
   `waktu_pembelian` datetime NOT NULL,
   PRIMARY KEY (`id_transaksi`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_transaksi_temp` */
-
-insert  into `tb_transaksi_temp`(`id_transaksi`,`id_pelanggan`,`no_token`,`id_strom`,`waktu_pembelian`) values (1,1,'367542354',1,'2018-06-02 16:26:38');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

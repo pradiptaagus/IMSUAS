@@ -236,17 +236,24 @@ def cekIUD(transaksi):
             # tanggal_json = data_json[i]['tanggal']
 
 			# Todo cek update dari tabel transaksi PLN atau Indomaret
-			if action == 'insert' and run == '0':
+			if action == 'update' and run == '0':
 				for a in range(jumlah_data_temp):
 					if id_json == data_temp[a][0]:
 						isi_data_json = data_json[i]['id_pelanggan'] + ' ' + data_json[i]['no_token'] + ' ' + data_json[i]['id_strom'] + ' ' + data_json[i]['waktu_pembelian']
-						print(isi_data_json)
+						# len_isi_data_json = len(isi_data_json)
+						# print(len_isi_data_json)
+						# print(isi_data_json)
 
 						sql = "SELECT CONCAT(id_pelanggan, ' ', no_token, ' ', id_strom, ' ', waktu_pembelian) AS data_pln_temp FROM tb_transaksi_temp WHERE tb_transaksi_temp.id_transaksi = %s"  % data_temp[a][0]
 						cur.execute(sql)
 						record_temp = cur.fetchone()
 						str_record_temp =''.join(record_temp)
-						print(str_record_temp)
+						# len_str_record_temp = len(str_record_temp)
+						# print(len_str_record_temp)
+						# print(str_record_temp)
+
+						if isi_data_json == str_record_temp:
+							print('sama')
 
     
 	
