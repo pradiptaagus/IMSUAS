@@ -48,7 +48,7 @@ def insertJson(id_transaksi, id_pelanggan, no_token, id_strom, jumlah_strom, jum
 # Gunakan function ini saja untuk menghemat penulisan code
 def uploadJson(local_file, dropbox_file):
 	dropbox_access_token = dropbox.Dropbox("EXeeHtUQ-7AAAAAAAAAAWoX2lq8qJhENikI27Ut23hnayr_4d72tl5jhly2B5nwy")
-	file_path = pathlib.Path('File JSON/' + local_file)
+	file_path = pathlib.Path('E:/Dokument Semester 4/Integrasi dan Migrasi Sistem/Project Akhir/IMSUAS/File JSON/' + local_file)
 	with file_path.open('rb') as file:
 		dropbox_access_token.files_upload(file.read(), '/' + dropbox_file, mode=dropbox.files.WriteMode("overwrite"))
 	print(local_file + "berhasil diunggah")
@@ -58,15 +58,29 @@ def uploadJson(local_file, dropbox_file):
 # function ini dapat digunakan untuk mengunggah file json dari PLN maupun Indomaret
 # Gunakan function ini saja untuk menghemat penulisan code
 def downloadJson(target_file, local_file):
-	target_file_dropbox = '/' + target_file
-	dropb = dropbox.Dropbox("EXeeHtUQ-7AAAAAAAAAAWoX2lq8qJhENikI27Ut23hnayr_4d72tl5jhly2B5nwy")
-	link = dropb.sharing_create_shared_link(target_file_dropbox)
-	url = link.url
-	download_url = re.sub(r"\?dl\=0", "?dl=1", url)
-	r = requests.get(download_url)
-	with open('File JSON/' + local_file, 'wb') as file:
-		file.write(r.content)
-	print(local_file + "berhasil diunuduh")
+	# target_file_dropbox = '/' + target_file
+	# target_file_dropbox = "/indomaret.json"
+	# print(target_file_dropbox)
+	# dropb = dropbox.Dropbox("EXeeHtUQ-7AAAAAAAAAAWoX2lq8qJhENikI27Ut23hnayr_4d72tl5jhly2B5nwy")
+	# link = dropb.sharing_create_shared_link(target_file_dropbox)
+	# url = link.url
+	# download_url = re.sub(r"\?dl\=0", "?dl=1", url)
+	# r = requests.get(download_url)
+	# with open('E:/Dokument Semester 4/Integrasi dan Migrasi Sistem/Project Akhir/IMSUAS/File JSON/' + local_file, 'wb') as file:
+	# 	file.write(r.content)
+	# print(local_file + "berhasil diunuduh")
+	
+	try:
+		dbx = dropbox.Dropbox('EXeeHtUQ-7AAAAAAAAAAWoX2lq8qJhENikI27Ut23hnayr_4d72tl5jhly2B5nwy')
+		target_file_dropbox = "/" + target_file
+		link = dbx.sharing_create_shared_link(target_file_dropbox)
+		url = link.url
+		dl_url = re.sub(r"\?dl\=1", "?dl=1", url)
+		print(dl_url)
+		dbx.files_download_to_file('E:/Dokument Semester 4/Integrasi dan Migrasi Sistem/Project Akhir/IMSUAS/File JSON/' + local_file, '/' + target_file)
+		print(local_file + " berhasil diunuduh")
+	except:
+		print(local_file + " tidak berhasil diunuduh")
 
 # function untuk insert , update delete pada tabel transaksi 
 # function ini dapat digunakan untuk mengubah tabel transaksi dan tabel temporary
@@ -96,6 +110,7 @@ def cekIUD(transaksi,con,cur):
 		# Todo menghitung banyak data dari tabel transaksi temporary Indomaret
 		jumlah_data_temp = len(data_temp)
 
+		downloadJson('indomaret.json', 'indomaret.json')
 		con_indomaret.close()
 
 	elif  transaksi == 'pln':
@@ -120,6 +135,7 @@ def cekIUD(transaksi,con,cur):
 		# Todo menghitung banyak data dari tabel transaksi temporary PLN dan Indomaret
 		jumlah_data_temp = len(data_temp)
 
+		downloadJson('pln.json', 'pln.json')
 		con_pln.close()
 
 	# Todo cek update dari tabel transaksi PLN
@@ -152,10 +168,11 @@ def cekIUD(transaksi,con,cur):
 				if transaksi == 'indomaret':
 					# Memasukkan perubahan ke file json
 					insertJson(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4],data[i][5],data[i][6], 'indomaret.json', 'update', '0')
+					uploadJson('indomaret.json', 'indomaret.json')
 				elif  transaksi == 'pln':
 					# Memasukkan perubahan ke file json
 					insertJson(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4],data[i][5],data[i][6], 'pln.json', 'update', '0')
-
+					uploadJson('pln.json', 'pln.json')
 
 	# Todo cek insert dari tabel transaksi PLN
 	if jumlah_data > jumlah_data_temp:
@@ -175,10 +192,11 @@ def cekIUD(transaksi,con,cur):
 		if transaksi == 'indomaret':
 			# Memasukkan perubahan ke file json
 			insertJson(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4],data[i][5],data[i][6], 'indomaret.json', 'insert', '0')
+			uploadJson('indomaret.json', 'indomaret.json')
 		elif  transaksi == 'pln':
 			# Memasukkan perubahan ke file json
 			insertJson(data[i][0], data[i][1], data[i][2], data[i][3], data[i][4],data[i][5],data[i][6], 'pln.json', 'insert', '0')
-
+			uploadJson('pln.json', 'pln.json')
 
 	# Todo cek delete dari tabel transaksi PLN
 	if jumlah_data < jumlah_data_temp:
@@ -202,19 +220,21 @@ def cekIUD(transaksi,con,cur):
 				if transaksi == 'indomaret':
 					# Memasukkan perubahan ke file json
 					insertJson(data_temp[i][0], data_temp[i][1], data_temp[i][2], data_temp[i][3], data_temp[i][4], data_temp[i][5], data_temp[i][6], 'indomaret.json', 'delete', '0')
+					uploadJson('indomaret.json', 'indomaret.json')
 				if transaksi == 'pln':
 					# Memasukkan perubahan ke file json
 					insertJson(data_temp[i][0], data_temp[i][1], data_temp[i][2], data_temp[i][3], data_temp[i][4],data_temp[i][5],data_temp[i][6], 'pln.json', 'delete', '0')
-	
+					uploadJson('pln.json', 'pln.json')
+
 	# ============================================
 	# Mulai proses 
 	# ============================================
 	# Cek file JSON PLN atau Indomaret
 	# ============================================
 	if transaksi == 'indomaret':
-        #DownlaodJsonToko()
+		downloadJson('pln.json', 'temp_pln.json')
         # Cek Pembahruan dalam JSON file database bank
-		with open('File JSON/pln.json', 'r', encoding='utf-8') as report:
+		with open('File JSON/temp_pln.json', 'r', encoding='utf-8') as report:
 			try:
 				data_json = json.load(report)
 			except:
@@ -223,9 +243,9 @@ def cekIUD(transaksi,con,cur):
 		db_perubahan = 'pln'
 
 	elif transaksi == 'pln':
-        #DownlaodJsonBank()
+		downloadJson('indomaret.json', 'temp_indomaret.json')
         # Cek Pembahruan dalam JSON file database toko
-		with open('File JSON/indomaret.json', 'r', encoding='utf-8') as report:
+		with open('File JSON/temp_indomaret.json', 'r', encoding='utf-8') as report:
 			try:
 				data_json = json.load(report)
 			except:
@@ -283,12 +303,13 @@ def cekIUD(transaksi,con,cur):
 							# memasukkan perubahan pada status run_bank menjadi 1
 							data_json[i]['run'] = '1'
 							if transaksi == 'indomaret':
-								with open('File JSON/pln.json', 'w', encoding='utf-8') as report:
+								with open('File JSON/temp_pln.json', 'w', encoding='utf-8') as report:
 									json.dump(data_json, report, indent=4)
-
+								uploadJson('temp_pln.json', 'pln.json')
 							elif transaksi == 'pln':
-								with open('File JSON/indomaret.json', 'w', encoding='utf-8') as report:
+								with open('File JSON/temp_indomaret.json', 'w', encoding='utf-8') as report:
 									json.dump(data_json, report, indent=4)
+								uploadJson('temp_indomaret.json', 'indomaret.json')
 
 			# Todo cek insert dari tabel transaksi PLN atau Indomaret
 			if action == 'insert' and run == '0':
@@ -313,11 +334,13 @@ def cekIUD(transaksi,con,cur):
 				# memasukkan perubahan pada status run_bank menjadi 1
 				data_json[i]['run'] = '1'
 				if transaksi == 'indomaret':
-					with open('File JSON/pln.json', 'w', encoding='utf-8') as report:
+					with open('File JSON/temp_pln.json', 'w', encoding='utf-8') as report:
 						json.dump(data_json, report, indent=4)
+					uploadJson('temp_pln.json', 'pln.json')
 				elif transaksi == 'pln':
-					with open('File JSON/indomaret.json', 'w', encoding='utf-8') as report:
+					with open('File JSON/temp_indomaret.json', 'w', encoding='utf-8') as report:
 						json.dump(data_json, report, indent=4)
+					uploadJson('temp_indomaret.json', 'indomaret.json')
 
 			# Todo cek delete dari tabel transaksi PLN atau Indomaret
 			if action == 'delete' and run == '0':
@@ -340,11 +363,13 @@ def cekIUD(transaksi,con,cur):
 				# memasukkan perubahan pada status run_bank menjadi 1
 				data_json[i]['run'] = '1'
 				if transaksi == 'indomaret':
-					with open('File JSON/pln.json', 'w', encoding='utf-8') as report:
+					with open('File JSON/temp_pln.json', 'w', encoding='utf-8') as report:
 						json.dump(data_json, report, indent=4)
+					uploadJson('temp_pln.json', 'pln.json')
 				elif transaksi == 'pln':
-					with open('File JSON/indomaret.json', 'w', encoding='utf-8') as report:
+					with open('File JSON/temp_indomaret.json', 'w', encoding='utf-8') as report:
 						json.dump(data_json, report, indent=4)
+					uploadJson('temp_indomaret.json', 'indomaret.json')
 
 # function main
 def main():
