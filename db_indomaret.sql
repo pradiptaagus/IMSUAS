@@ -59,6 +59,22 @@ CREATE TABLE `tb_transaksi` (
 
 /*Data for the table `tb_transaksi` */
 
+/*Table structure for table `tb_transaksi_temp` */
+
+DROP TABLE IF EXISTS `tb_transaksi_temp`;
+
+CREATE TABLE `tb_transaksi_temp` (
+  `id_transaksi` int(11) NOT NULL AUTO_INCREMENT,
+  `id_pelanggan` int(11) NOT NULL,
+  `no_token` varchar(25) NOT NULL,
+  `jumlah_strom` int(11) NOT NULL,
+  `jumlah_pembayaran` enum('20','50','100','200','500') NOT NULL,
+  `waktu_pembelian` datetime NOT NULL,
+  PRIMARY KEY (`id_transaksi`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_transaksi_temp` */
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
