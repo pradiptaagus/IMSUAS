@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v11.11 (64 bit)
-MySQL - 5.5.5-10.1.19-MariaDB : Database - db_indomaret
+SQLyog Ultimate v12.09 (64 bit)
+MySQL - 10.1.32-MariaDB : Database - db_indomaret
 *********************************************************************
 */
 
@@ -22,8 +22,8 @@ DROP TABLE IF EXISTS `tb_meter`;
 
 CREATE TABLE `tb_meter` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `tegangan_meter` enum('450','900','1350') DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `tegangan_meter` int(11) NOT NULL,
+  PRIMARY KEY (`id`,`tegangan_meter`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_meter` */
@@ -37,11 +37,14 @@ CREATE TABLE `tb_pelanggan` (
   `nama_pelanggan` varchar(50) NOT NULL,
   `alamat` varchar(100) NOT NULL,
   `id_meter` int(11) NOT NULL,
+  `no_meter` varchar(25) NOT NULL,
   `waktu_pendaftaran` datetime NOT NULL,
   PRIMARY KEY (`id_pelanggan`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_pelanggan` */
+
+insert  into `tb_pelanggan`(`id_pelanggan`,`nama_pelanggan`,`alamat`,`id_meter`,`no_meter`,`waktu_pendaftaran`) values (1,'Pradipta','Klungkung',12123456,'1','2018-06-03 01:13:46');
 
 /*Table structure for table `tb_strom` */
 
@@ -52,9 +55,11 @@ CREATE TABLE `tb_strom` (
   `jumlah_pembayaran` int(11) NOT NULL,
   `jumlah_strom` int(11) NOT NULL,
   PRIMARY KEY (`id_strom`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_strom` */
+
+insert  into `tb_strom`(`id_strom`,`jumlah_pembayaran`,`jumlah_strom`) values (1,50000,15);
 
 /*Table structure for table `tb_transaksi` */
 
