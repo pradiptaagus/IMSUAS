@@ -46,7 +46,7 @@ def insertJson(id_transaksi, id_pelanggan, no_token, id_strom, jumlah_strom, jum
 # function ini dapat digunakan untuk mengunggah file json dari PLN maupun Indomaret
 # Gunakan function ini saja untuk menghemat penulisan code
 def uploadJson(local_file, dropbox_file):
-	dropbox_access_token = dropbox.Dropbox("EXeeHtUQ-7AAAAAAAAAAWoX2lq8qJhENikI27Ut23hnayr_4d72tl5jhly2B5nwy")
+	dropbox_access_token = dropbox.Dropbox("9Em04orxhVAAAAAAAAAAEkWTQhZXnfIGW44R7Yz9i6QSpfRaKxt4lR2hrq6IUtXr")
 	file_path = pathlib.Path('E:/Dokument Semester 4/Integrasi dan Migrasi Sistem/Project Akhir/IMSUAS/File JSON/' + local_file)
 	with file_path.open('rb') as file:
 		dropbox_access_token.files_upload(file.read(), '/' + dropbox_file, mode=dropbox.files.WriteMode("overwrite"))
@@ -70,7 +70,7 @@ def downloadJson(target_file, local_file):
 	# print(local_file + "berhasil diunuduh")
 	
 	try:
-		dbx = dropbox.Dropbox('EXeeHtUQ-7AAAAAAAAAAWoX2lq8qJhENikI27Ut23hnayr_4d72tl5jhly2B5nwy')
+		dbx = dropbox.Dropbox('9Em04orxhVAAAAAAAAAAEkWTQhZXnfIGW44R7Yz9i6QSpfRaKxt4lR2hrq6IUtXr')
 		target_file_dropbox = "/" + target_file
 		link = dbx.sharing_create_shared_link(target_file_dropbox)
 		url = link.url
