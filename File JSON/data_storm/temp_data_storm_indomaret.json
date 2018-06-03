@@ -1,0 +1,24 @@
+[
+    {
+        "id_transaksi": "1",
+        "id_pelanggan": "1",
+        "no_token": "3234435",
+        "id_strom": "1",
+        "jumlah_strom": "50000",
+        "jumlah_pembayaran": "60000",
+        "waktu_pembelian": "2018-06-03 00:19:48",
+        "action": "insert",
+        "run": "1"
+    },
+    {
+        "id_transaksi": "3",
+        "id_pelanggan": "2",
+        "no_token": "6234566",
+        "id_strom": "3",
+        "jumlah_strom": "50000",
+        "jumlah_pembayaran": "60000",
+        "waktu_pembelian": "2018-06-03 02:03:32",
+        "action": "insert",
+        "run": "1"
+    }
+]

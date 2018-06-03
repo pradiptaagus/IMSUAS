@@ -1,0 +1,73 @@
+[
+    {
+        "id_transaksi": "2",
+        "id_pelanggan": "1",
+        "no_token": "3466354",
+        "id_strom": "2",
+        "jumlah_strom": "40000",
+        "jumlah_pembayaran": "50000",
+        "waktu_pembelian": "2018-06-03 01:54:26",
+        "action": "insert",
+        "run": "1"
+    },
+    {
+        "id_pelanggan": "1",
+        "nama_pelanggan": "Pradipta",
+        "alamat": "Klungkung",
+        "id_meter": "1",
+        "no_meter": "123efe9",
+        "waktu_pendaftaran": "2018-06-03 01:06:52",
+        "action": "insert",
+        "run": "1"
+    },
+    {
+        "id_pelanggan": "1",
+        "nama_pelanggan": "Pradipta",
+        "alamat": "Klungkung",
+        "id_meter": "1",
+        "no_meter": "123efe9",
+        "waktu_pendaftaran": "2018-06-03 01:06:52",
+        "action": "insert",
+        "run": "1"
+    },
+    {
+        "id_pelanggan": "1",
+        "nama_pelanggan": "Pradipta",
+        "alamat": "Klungkung",
+        "id_meter": "1",
+        "no_meter": "123efe9",
+        "waktu_pendaftaran": "2018-06-03 01:06:52",
+        "action": "insert",
+        "run": "1"
+    },
+    {
+        "id_pelanggan": "1",
+        "nama_pelanggan": "Pradipta",
+        "alamat": "Klungkung",
+        "id_meter": "1",
+        "no_meter": "123efe9",
+        "waktu_pendaftaran": "2018-06-03 01:06:52",
+        "action": "insert",
+        "run": "1"
+    },
+    {
+        "id_pelanggan": "1",
+        "nama_pelanggan": "Pradipta",
+        "alamat": "Klungkung",
+        "id_meter": "1",
+        "no_meter": "123efe9",
+        "waktu_pendaftaran": "2018-06-03 01:06:52",
+        "action": "insert",
+        "run": "1"
+    },
+    {
+        "id_pelanggan": "1",
+        "nama_pelanggan": "Pradipta",
+        "alamat": "Klungkung",
+        "id_meter": "1",
+        "no_meter": "123efe9",
+        "waktu_pendaftaran": "2018-06-03 01:06:52",
+        "action": "insert",
+        "run": "1"
+    }
+]

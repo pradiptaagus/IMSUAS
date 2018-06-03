@@ -1,0 +1,12 @@
+[
+    {
+        "id_pelanggan": "2",
+        "nama_pelanggan": "pande nata",
+        "alamat": "Bangli",
+        "id_meter": "2",
+        "no_meter": "637gdgs",
+        "waktu_pendaftaran": "2018-06-03 15:32:16",
+        "action": "insert",
+        "run": "1"
+    }
+]
