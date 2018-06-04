@@ -23,6 +23,8 @@
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Datatables -->
+    <link rel="stylesheet" href="{{ asset('/css/datatables.min.css') }}">
   </head>
   <body class="app sidebar-mini rtl">
     <!-- Navbar-->
@@ -95,10 +97,10 @@
         </div>
       </div>
       <ul class="app-menu">
-        <li><a class="app-menu__item @yield('active1')" href="index.html"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
+        <li><a class="app-menu__item @yield('active1')" href="/"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
+        <li><a class="app-menu__item @yield('active2')" href="{{ route('transaction.index') }}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Transaksi</span></a></li>
         <li class="treeview"><a class="app-menu__item @yield('active')" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Master</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
-            <li><a class="treeview-item @yield('active2')" href=""><i class="icon fa fa-circle-o"></i> Transaksi</a></li>
             <li><a class="treeview-item @yield('active3')" href="{{ route('customer.index') }}"><i class="icon fa fa-circle-o"></i> Pelanggan</a></li>
             <li><a class="treeview-item @yield('active4')" href="{{ route('strom.index') }}"><i class="icon fa fa-circle-o"></i> Strom</a></li>
             <li><a class="treeview-item @yield('active5')" href="{{ route('meter.index') }}"><i class="icon fa fa-circle-o"></i> Meter</a></li>
@@ -129,5 +131,13 @@
     <script src="js/plugins/pace.min.js"></script>
     <!-- Page specific javascripts-->
     <script type="text/javascript" src="js/plugins/chart.js"></script>
+    <!-- Datatables -->
+    <script src="{{ asset('/js/datatables.min.js') }}"></script>
+    <script>
+      $(document).ready( function () {
+        $('#datatables').DataTable();
+      });
+    </script>
+    @yield('script')
   </body>
 </html>

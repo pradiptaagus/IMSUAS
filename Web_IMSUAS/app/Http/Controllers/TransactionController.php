@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use DB;
 use Illuminate\Http\Request;
-use App\Strom;
+use App\Transaction;
+use App\Meter;
 
-class StromController extends Controller
+class TransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +16,12 @@ class StromController extends Controller
      */
     public function index()
     {
-        $stroms = Strom::all();
-        return view('strom', compact('stroms'));
+        $transactions = DB::table('tb_transaksi')
+                            ->join('tb_strom', 'tb_transaksi.id_strom', '=', 'tb_strom.id_strom')
+                            ->join('tb_pelanggan', 'tb_transaksi.id_pelanggan', '=', 'tb_pelanggan.id_pelanggan')
+                            ->select('tb_transaksi.*', 'tb_pelanggan.nama_pelanggan', 'tb_pelanggan.no_meter')->orderBy('id_transaksi', 'desc')->get();
+        // return $transactions;
+        return view('transaksi', compact('transactions'));
     }
 
     /**
@@ -37,13 +42,9 @@ class StromController extends Controller
      */
     public function store(Request $request)
     {
-        $strom = new Strom;
+        $transaction = New Transaction;
 
-        $strom->jumlah_pembayaran = $request->cost;
-        $strom->jumlah_strom = $request->strom_result;
-
-        $strom->save();
-        return redirect('/strom');
+        $transaction->id_pelanggan = $request->customer;
     }
 
     /**
@@ -77,13 +78,7 @@ class StromController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $strom = Strom::find($id);
-
-        $strom->jumlah_pembayaran = $request->cost;
-        $strom->jumlah_strom = $request->strom_result;
-
-        $strom->save();
-        return redirect('/strom');
+        //
     }
 
     /**
@@ -94,10 +89,6 @@ class StromController extends Controller
      */
     public function destroy($id)
     {
-        $strom = Strom::where('id_strom', '=', $id);
-
-        $strom->delete();
-
-        return redirect('/strom');
+        //
     }
 }

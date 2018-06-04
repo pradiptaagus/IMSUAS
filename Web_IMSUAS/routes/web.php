@@ -11,13 +11,18 @@
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
-});
+// Route::get('/', function () {
+//     return view('dashboard');
+// });
 
 Route::resource('customer', 'CustomerController');
 
 Route::resource('strom', 'StromController');
 
 Route::resource('meter', 'MeterController');
+
+Route::resource('transaction', 'TransactionController');
+
+Route::get('/', 'DashboardController@index')->name('dashboard.index');
+Route::post('/store', 'DashboardController@store')->name('dashboard.store');
 
