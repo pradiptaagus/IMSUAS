@@ -31,7 +31,7 @@ def insertJson(id_meter,tegangan_meter, nama_file_json, action, run):
 		except:
 			data = []
 	# menambahkan record baru ke variabel temporary
-	new_entry = {'id_meter': str(id_meter), 'tegangan_meter': tegangan_meter, 'action': action, 'run': run}
+	new_entry = {'id_meter': str(id_meter), 'tegangan_meter': str(tegangan_meter), 'action': action, 'run': run}
 	# append record baru ke variabel array
 	list_data.append(new_entry)
 	# menyimpan record baru ke file json
@@ -125,13 +125,14 @@ def cekIUD(transaksi,con,cur):
 	if jumlah_data == jumlah_data_temp:
 		print("Cek update pada tabel meter " + transaksi + "..")
 		for i in range(0, jumlah_data):
+			a = i + 1
 			# Melakukan select concat pada tabel transaksi PLN
-			sql = "SELECT CONCAT(id_meter, ' ', tegangan_meter, ' ') AS data_pln FROM tb_meter WHERE tb_meter.id_meter = %s"  % i
+			sql = "SELECT CONCAT(id_meter, ' ', tegangan_meter, ' ') AS data_pln FROM tb_meter WHERE tb_meter.id_meter = %s"  % a
 			cur.execute(sql)
 			record = cur.fetchone()
 
 			# Melakukan select concat pada tabel transaksi temp PLN
-			sql = "SELECT CONCAT(id_meter, ' ', tegangan_meter, ' ') AS data_pln_temp FROM tb_meter_temp WHERE tb_meter_temp.id_meter = %s"  % i
+			sql = "SELECT CONCAT(id_meter, ' ', tegangan_meter, ' ') AS data_pln_temp FROM tb_meter_temp WHERE tb_meter_temp.id_meter = %s"  % a
 			cur.execute(sql)
 			record_temp = cur.fetchone()
 
@@ -247,6 +248,7 @@ def cekIUD(transaksi,con,cur):
 			if action == 'update' and run == '0':
 				for a in range(jumlah_data_temp):
 					if id_json == data_temp[a][0]:
+
 						isi_data_json = data_json[i]['id_meter'] + ' ' + data_json[i]['tegangan_meter'] 
 
 						sql = "SELECT CONCAT(id_meter, ' ', tegangan_meter) AS data_pln_temp FROM tb_meter_temp WHERE tb_meter_temp.id_meter = %s"  % data_temp[a][0]
@@ -257,8 +259,11 @@ def cekIUD(transaksi,con,cur):
 						if isi_data_json != str_record_temp:
 							# print notifikasi
 							print(
-                                "Terjadi perubahan pada Json, data sebelumnya %s berubah menjadi %s pada id %s" % (
-                                    str_record_temp, isi_data_json, id_json))
+                                "Terjadi perubahan pada Json, data sebelumnya %s berubah menjadi :" % (
+                                    str_record_temp))
+							t = PrettyTable(['id_meter', 'tegangan_meter'])
+							t.add_row([data_json[i]['id_meter'],data_json[i]['tegangan_meter']])
+							print(t)
 
 							# update pada tabel transaksi temporary
 							sql = "UPDATE tb_meter_temp SET tb_meter_temp.tegangan_meter = '%s' WHERE tb_meter_temp.id_meter = %s" % (

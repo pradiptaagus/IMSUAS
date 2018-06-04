@@ -1,0 +1,16 @@
+[
+    {
+        "id_strom": "1",
+        "jumlah_pembayaran": "5000001",
+        "jumlah_strom": "100000",
+        "action": "update",
+        "run": "1"
+    },
+    {
+        "id_strom": "1",
+        "jumlah_pembayaran": "5000001",
+        "jumlah_strom": "100000",
+        "action": "delete",
+        "run": "1"
+    }
+]

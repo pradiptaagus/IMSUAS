@@ -126,13 +126,14 @@ def cekIUD(transaksi,con,cur):
 	if jumlah_data == jumlah_data_temp:
 		print("Cek update pada tabel pelanggan " + transaksi + "..")
 		for i in range(0, jumlah_data):
+			a = i + 1
 			# Melakukan select concat pada tabel pelanggan PLN
-			sql = "SELECT CONCAT(id_pelanggan, ' ', nama_pelanggan, ' ', alamat, ' ', id_meter, ' ', no_meter, ' ', waktu_pendaftaran, ' ') AS data_pln FROM tb_pelanggan WHERE tb_pelanggan.id_pelanggan = %s"  % i
+			sql = "SELECT CONCAT(id_pelanggan, ' ', nama_pelanggan, ' ', alamat, ' ', id_meter, ' ', no_meter, ' ', waktu_pendaftaran, ' ') AS data_pln FROM tb_pelanggan WHERE tb_pelanggan.id_pelanggan = %s"  % a
 			cur.execute(sql)
 			record = cur.fetchone()
 
 			# Melakukan select concat pada tabel pelanggan temp PLN
-			sql = "SELECT CONCAT(id_pelanggan, ' ', nama_pelanggan, ' ', alamat, ' ', id_meter, ' ', no_meter, ' ', waktu_pendaftaran, ' ') AS data_pln_temp FROM tb_pelanggan_temp WHERE tb_pelanggan_temp.id_pelanggan = %s"  % i
+			sql = "SELECT CONCAT(id_pelanggan, ' ', nama_pelanggan, ' ', alamat, ' ', id_meter, ' ', no_meter, ' ', waktu_pendaftaran, ' ') AS data_pln_temp FROM tb_pelanggan_temp WHERE tb_pelanggan_temp.id_pelanggan = %s"  % a
 			cur.execute(sql)
 			record_temp = cur.fetchone()
 
@@ -248,11 +249,8 @@ def cekIUD(transaksi,con,cur):
 			if action == 'update' and run == '0':
 				for a in range(jumlah_data_temp):
 					if id_json == data_temp[a][0]:
-						isi_data_json = data_json[i]['id_pelanggan'] + ' ' + data_json[i][' nama_pelanggan'] + ' ' + data_json[i]['alamat']+ ' ' + data_json[i]['id_meter']+ ' ' + data_json[i]['no_meter'] + ' ' + data_json[i]['waktu_pendaftaran']
-						# len_isi_data_json = len(isi_data_json)
-						# print(len_isi_data_json)
-						# print(isi_data_json)
-
+						isi_data_json = data_json[i]['id_pelanggan'] + ' ' + data_json[i]['nama_pelanggan'] + ' ' + data_json[i]['alamat']+ ' ' + data_json[i]['id_meter']+ ' ' + data_json[i]['no_meter'] + ' ' + data_json[i]['waktu_pendaftaran']
+						
 						sql = "SELECT CONCAT(id_pelanggan, ' ', nama_pelanggan, ' ', alamat, ' ', id_meter, ' ', no_meter, ' ', waktu_pendaftaran, ' ') AS data_pln_temp FROM tb_pelanggan_temp WHERE tb_pelanggan_temp.id_pelanggan = %s"  % data_temp[a][0]
 						cur.execute(sql)
 						record_temp = cur.fetchone()
@@ -260,30 +258,30 @@ def cekIUD(transaksi,con,cur):
 
 						if isi_data_json != str_record_temp:
 							# print notifikasi
-							print(
-                                "Terjadi perubahan pada Json, data sebelumnya %s berubah menjadi %s pada id %s" % (
-                                    str_record_temp, isi_data_json, id_json))
+							t = PrettyTable(['id_pelanggan', 'nama_pelanggan', 'alamat', 'id_meter', 'no_meter', 'waktu_pendaftaran'])
+							t.add_row([data_json[i]['id_pelanggan'],data_json[i]['nama_pelanggan'], data_json[i]['alamat'], data_json[i]['id_meter'], data_json[i]['no_meter'], data_json[i]['waktu_pendaftaran']])
+							print(t)
 
 							# update pada tabel transaksi temporary
 							sql = "UPDATE tb_pelanggan_temp SET tb_pelanggan_temp.nama_pelanggan = '%s', tb_pelanggan_temp.alamat = '%s', tb_pelanggan_temp.id_meter = %s,tb_pelanggan_temp.no_meter='%s', tb_pelanggan_temp.waktu_pendaftaran='%s' WHERE tb_pelanggan_temp.id_pelanggan = %s" % (
-								data_json[i]['id_pelanggan'], data_json[i][' nama_pelanggan'], data_json[i]['alamat'], data_json[i]['id_meter'], data_json[i]['no_meter'], data_json[i]['waktu_pendaftaran'])
+								 data_json[i]['nama_pelanggan'], data_json[i]['alamat'], data_json[i]['id_meter'], data_json[i]['no_meter'], data_json[i]['waktu_pendaftaran'],data_json[i]['id_pelanggan'])
 							cur.execute(sql)
 							con.commit()
 
 							# update pada tabel transaksi
 							sql = "UPDATE tb_pelanggan SET tb_pelanggan.nama_pelanggan = '%s', tb_pelanggan.alamat = '%s', tb_pelanggan.id_meter = %s,tb_pelanggan.no_meter='%s', tb_pelanggan.waktu_pendaftaran='%s' WHERE tb_pelanggan.id_pelanggan = %s" % (
-								data_json[i]['id_pelanggan'], data_json[i][' nama_pelanggan'], data_json[i]['alamat'], data_json[i]['id_meter'], data_json[i]['no_meter'], data_json[i]['waktu_pendaftaran'])
+								 data_json[i]['nama_pelanggan'], data_json[i]['alamat'], data_json[i]['id_meter'], data_json[i]['no_meter'], data_json[i]['waktu_pendaftaran'],data_json[i]['id_pelanggan'])
 							cur.execute(sql)
 							con.commit()
 
 							# memasukkan perubahan pada status run_bank menjadi 1
 							data_json[i]['run'] = '1'
 							if transaksi == 'indomaret':
-								with open('File JSON/temp_data_pelanggan_pln.json', 'w', encoding='utf-8') as report:
+								with open('File JSON/data_pelanggan/temp_data_pelanggan_pln.json', 'w', encoding='utf-8') as report:
 									json.dump(data_json, report, indent=4)
 								uploadJson('temp_data_pelanggan_pln.json', 'data_pelanggan_pln.json')
 							elif transaksi == 'pln':
-								with open('File JSON/temp_data_pelanggan_indomaret.json', 'w', encoding='utf-8') as report:
+								with open('File JSON/data_pelanggan/temp_data_pelanggan_indomaret.json', 'w', encoding='utf-8') as report:
 									json.dump(data_json, report, indent=4)
 								uploadJson('temp_data_pelanggan_indomaret.json', 'data_pelanggan_indomaret.json')
 
@@ -302,7 +300,7 @@ def cekIUD(transaksi,con,cur):
 				con.commit()
 
 				# insert into tb transaksi
-				sql = "INSERT INTO tb_pelanggan( nama_pelanggan, alamat, id_meter, no_meter, waktu_pendaftaran) VALUES('%s', '%s', %s, '%s', '%s')" % (
+				sql = "INSERT INTO tb_pelanggan(nama_pelanggan, alamat, id_meter, no_meter, waktu_pendaftaran) VALUES('%s', '%s', %s, '%s', '%s')" % (
 				data_json[i]['nama_pelanggan'], data_json[i]['alamat'], data_json[i]['id_meter'], data_json[i]['no_meter'], data_json[i]['waktu_pendaftaran'])
 				cur.execute(sql)
 				con.commit()					

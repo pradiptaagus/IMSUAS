@@ -1,0 +1,14 @@
+[
+    {
+        "id_meter": "1",
+        "tegangan_meter": "11111",
+        "action": "update",
+        "run": "1"
+    },
+    {
+        "id_meter": "1",
+        "tegangan_meter": "10000",
+        "action": "update",
+        "run": "1"
+    }
+]
