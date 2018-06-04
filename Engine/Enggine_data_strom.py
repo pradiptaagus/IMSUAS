@@ -31,7 +31,7 @@ def insertJson(id_storm, jumlah_pembayaran, jumlah_strom, nama_file_json, action
 		except:
 			data = []
 	# menambahkan record baru ke variabel temporary
-	new_entry = {'id_strom': str(id_storm), 'jumlah_pembayaran': jumlah_pembayaran, 'jumlah_strom': jumlah_strom, 'action': action, 'run': run}
+	new_entry = {'id_strom': str(id_storm), 'jumlah_pembayaran': str(jumlah_pembayaran), 'jumlah_strom': str(jumlah_strom), 'action': action, 'run': run}
 	# append record baru ke variabel array
 	list_data.append(new_entry)
 	# menyimpan record baru ke file json
@@ -125,13 +125,14 @@ def cekIUD(transaksi,con,cur):
 	if jumlah_data == jumlah_data_temp:
 		print("Cek update pada tabel strom " + transaksi + "..")
 		for i in range(0, jumlah_data):
+			a = i + 1
 			# Melakukan select concat pada tabel transaksi PLN
-			sql = "SELECT CONCAT(id_strom,' ', jumlah_pembayaran, ' ', jumlah_strom, ' ') AS data_pln FROM tb_strom WHERE tb_strom.id_strom = %s"  % i
+			sql = "SELECT CONCAT(id_strom,' ', jumlah_pembayaran, ' ', jumlah_strom, ' ') AS data_pln FROM tb_strom WHERE tb_strom.id_strom = %s"  % a
 			cur.execute(sql)
 			record = cur.fetchone()
 
 			# Melakukan select concat pada tabel transaksi temp PLN
-			sql = "SELECT CONCAT(id_strom,' ', jumlah_pembayaran, ' ', jumlah_strom, ' ') AS data_pln_temp FROM tb_strom_temp WHERE tb_strom_temp.id_strom = %s"  % i
+			sql = "SELECT CONCAT(id_strom,' ', jumlah_pembayaran, ' ', jumlah_strom, ' ') AS data_pln_temp FROM tb_strom_temp WHERE tb_strom_temp.id_strom = %s"  % a
 			cur.execute(sql)
 			record_temp = cur.fetchone()
 
@@ -256,9 +257,13 @@ def cekIUD(transaksi,con,cur):
 
 						if isi_data_json != str_record_temp:
 							# print notifikasi
-							print(
-                                "Terjadi perubahan pada Json, data sebelumnya %s berubah menjadi %s pada id %s" % (
-                                    str_record_temp, isi_data_json, id_json))
+							# print(
+                            #     "Terjadi perubahan pada Json, data sebelumnya %s berubah menjadi %s pada id %s" % (
+                            #         str_record_temp, isi_data_json, id_json))
+							print("Terjadi perubahan pada Json pada tb_strom " + transaksi + "..")
+							t = PrettyTable(['id_strom', 'jumlah_pembayaran', 'jumlah_strom'])
+							t.add_row([data_json[i]['id_strom'], data_json[i]['jumlah_pembayaran'], data_json[i]['jumlah_strom']])
+							print(t)
 
 							# update pada tabel transaksi temporary
 							sql = "UPDATE tb_strom_temp SET tb_strom_temp.jumlah_pembayaran = %s, tb_strom_temp.jumlah_strom = %s WHERE tb_strom_temp.id_strom = %s" % (
@@ -267,7 +272,7 @@ def cekIUD(transaksi,con,cur):
 							con.commit()
 
 							# update pada tabel transaksi
-							sql = "UPDATE tb_strom_temp SET tb_strom_temp.jumlah_pembayaran = %s, tb_strom_temp.jumlah_strom = %s WHERE tb_strom_temp.id_strom = %s" % (
+							sql = "UPDATE tb_strom SET tb_strom.jumlah_pembayaran = %s, tb_strom.jumlah_strom = %s WHERE tb_strom.id_strom = %s" % (
 								data_json[i]['jumlah_pembayaran'], data_json[i]['jumlah_strom'],data_json[i]['id_strom'])
 							cur.execute(sql)
 							con.commit()

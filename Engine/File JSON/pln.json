@@ -1,13 +1,24 @@
 [
     {
-        "id_transaksi": "2",
+        "id_transaksi": "1",
         "id_pelanggan": "1",
-        "no_token": "3466354",
+        "no_token": "434300",
+        "id_strom": "1",
+        "jumlah_strom": "50000",
+        "jumlah_pembayaran": "60000",
+        "waktu_pembelian": "2018-06-05 02:21:51",
+        "action": "update",
+        "run": "1"
+    },
+    {
+        "id_transaksi": "1",
+        "id_pelanggan": "5",
+        "no_token": "434300",
         "id_strom": "2",
-        "jumlah_strom": "40000",
-        "jumlah_pembayaran": "50000",
-        "waktu_pembelian": "2018-06-03 01:54:26",
-        "action": "insert",
+        "jumlah_strom": "500001",
+        "jumlah_pembayaran": "600001",
+        "waktu_pembelian": "2018-06-05 02:21:51",
+        "action": "update",
         "run": "1"
     }
 ]
