@@ -13,7 +13,7 @@
     <div class="col-md-6 col-lg-3">
       <div class="widget-small primary coloured-icon"><i class="icon fa fa-users fa-3x"></i>
         <div class="info">
-          <h4>Users</h4>
+          <h4>Pelanggan</h4>
           <p><b>{{ $sum_customers }}</b></p>
         </div>
       </div>
@@ -21,8 +21,8 @@
     <div class="col-md-6 col-lg-3">
       <div class="widget-small info coloured-icon"><i class="icon fa fa-thumbs-o-up fa-3x"></i>
         <div class="info">
-          <h4>Likes</h4>
-          <p><b>25</b></p>
+          <h4>Transaksi</h4>
+          <p><b>{{ $sum_transactions }}</b></p>
         </div>
       </div>
     </div>
@@ -127,14 +127,14 @@
 																				</div>    
 
 																				<div class="form-group row">
-																						<label for="voltage" class="col-md-4 col-form-label text-md-left">{{ __('Jumlah strom') }}</label>
+																						<label for="voltage" class="col-md-4 col-form-label text-md-left">{{ __('Jumlah pembayaran') }}</label>
 				
 																						<div class="col-md-8">
 																								<select id="select" name="voltage" class="custom-select">
 																										@foreach($stroms as $strom)
-																												<option value="{{$strom->id_strom}}">{{$strom->jumlah_strom}} kWH</option>
-																												<input type="hidden" name="jumlah_strom" value="{{ $strom->jumlah_strom }}">
-																												<input type="hidden" name="jumlah_pembayaran" value="{{ $strom->jumlah_pembayaran }}">
+																												<option value="{{$strom->id_strom}}">Rp. {{$strom->jumlah_pembayaran}} - {{ $strom->jumlah_strom }}kWH</option>
+																												{{-- <input type="hidden" name="jumlah_strom" value="{{ $strom->jumlah_strom }}">
+																												<input type="hidden" name="jumlah_pembayaran" value="{{ $strom->jumlah_pembayaran }}"> --}}
 																										@endforeach
 																								</select>
 				
@@ -146,7 +146,7 @@
 																						</div>
 																				</div>
 
-																				<div class="form-group row">
+																				{{-- <div class="form-group row">
 																					<label for="jml_pembayaran" class="col-md-4 col-form-label text-md-left">{{ __('Jumlah pembayaran') }}</label>
 			
 																					<div class="col-md-8">
@@ -158,7 +158,7 @@
 																								</span>
 																							@endif
 																					</div>
-																				</div>   
+																				</div>    --}}
 																		</div>
 																		<div class="modal-footer">
 																				<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"><i class="fa fa-times"></i></button>
@@ -179,5 +179,15 @@
 @endsection
 
 @section('script')
+<script>
+	$('#select').change(function(){
+		if($(this).val() != ''){
+			var name = $("select").val();
+
+			$.ajax({
+				($('#jml_pembayaran').val(value.select);
+			}
+	});
+</script>
 
 @endsection
