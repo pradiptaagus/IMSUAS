@@ -1,0 +1,9 @@
+[
+    {
+        "id_strom": "1",
+        "jumlah_pembayaran": 50000,
+        "jumlah_strom": 15,
+        "action": "insert",
+        "run": "1"
+    }
+]

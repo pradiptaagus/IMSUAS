@@ -69,5 +69,15 @@
         "waktu_pendaftaran": "2018-06-03 01:06:52",
         "action": "insert",
         "run": "1"
+    },
+    {
+        "id_pelanggan": "3",
+        "nama_pelanggan": "locong",
+        "alamat": "klungkung",
+        "id_meter": "3",
+        "no_meter": "36543gt",
+        "waktu_pendaftaran": "2018-06-04 16:49:12",
+        "action": "insert",
+        "run": "1"
     }
 ]
