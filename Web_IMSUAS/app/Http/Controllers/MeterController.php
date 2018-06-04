@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
 use App\Meter;
 
@@ -36,7 +37,12 @@ class MeterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $meter = new Meter;
+
+        $meter->tegangan_meter = $request->voltage;
+
+        $meter->save();
+        return redirect('/meter');
     }
 
     /**
@@ -70,7 +76,12 @@ class MeterController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $meter = Meter::find($id);
+
+        $meter->tegangan_meter = $request->voltage;
+
+        $meter->save();
+        return redirect('/meter');
     }
 
     /**
@@ -81,6 +92,8 @@ class MeterController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $meter = Meter::find($id);
+        $meter->delete();
+        return redirect('/meter');
     }
 }

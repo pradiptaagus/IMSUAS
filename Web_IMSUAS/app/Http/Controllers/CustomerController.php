@@ -85,7 +85,16 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $customer = Customer::find($id);
+
+        $customer->nama_pelanggan = $request->name;
+        $customer->alamat = $request->address;
+        $customer->id_meter = $request->voltage;
+        $customer->no_meter = $request->no_meter;
+        $customer->waktu_pendaftaran = date("Y-m-d H:i:s");
+
+        $customer->save();
+        return redirect('/customer');
     }
 
     /**
@@ -98,7 +107,7 @@ class CustomerController extends Controller
     {
         $customer = Customer::find($id);
 		if ($customer) {
-			$cusomer->delete();
+			$customer->delete();
 		}
 		return redirect('/customer');
     }
