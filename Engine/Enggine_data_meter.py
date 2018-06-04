@@ -43,7 +43,7 @@ def insertJson(id_meter,tegangan_meter, nama_file_json, action, run):
 # Gunakan function ini saja untuk menghemat penulisan code
 def uploadJson(local_file, dropbox_file):
 	dropbox_access_token = dropbox.Dropbox("9Em04orxhVAAAAAAAAAAEkWTQhZXnfIGW44R7Yz9i6QSpfRaKxt4lR2hrq6IUtXr")
-	file_path = pathlib.Path('E:/Dokument Semester 4/Integrasi dan Migrasi Sistem/Project Akhir/IMSUAS/File JSON/data_meter/' + local_file)
+	file_path = pathlib.Path('E:/Dokument Semester 4/Integrasi dan Migrasi Sistem/Project Akhir/IMSUAS/Engine/File JSON/data_meter/' + local_file)
 	with file_path.open('rb') as file:
 		dropbox_access_token.files_upload(file.read(), '/' + dropbox_file, mode=dropbox.files.WriteMode("overwrite"))
 	print(local_file + "berhasil diunggah")
@@ -60,7 +60,7 @@ def downloadJson(target_file, local_file):
 		url = link.url
 		dl_url = re.sub(r"\?dl\=1", "?dl=1", url)
 		print(dl_url)
-		dbx.files_download_to_file('E:/Dokument Semester 4/Integrasi dan Migrasi Sistem/Project Akhir/IMSUAS/File JSON/data_meter/' + local_file, '/' + target_file)
+		dbx.files_download_to_file('E:/Dokument Semester 4/Integrasi dan Migrasi Sistem/Project Akhir/IMSUAS/Engine/File JSON/data_meter/' + local_file, '/' + target_file)
 		print(local_file + " berhasil diunuduh")
 	except:
 		print(local_file + " tidak berhasil diunuduh")
