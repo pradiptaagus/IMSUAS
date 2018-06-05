@@ -1,14 +1,14 @@
 [
     {
-        "id_meter": "2",
-        "tegangan_meter": "50001",
-        "action": "update",
+        "id_meter": "1",
+        "tegangan_meter": "450",
+        "action": "insert",
         "run": "1"
     },
     {
-        "id_meter": "1",
-        "tegangan_meter": "10000",
-        "action": "delete",
+        "id_meter": "3",
+        "tegangan_meter": "1300",
+        "action": "insert",
         "run": "1"
     }
 ]

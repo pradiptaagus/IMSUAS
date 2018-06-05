@@ -1,21 +1,31 @@
 [
     {
         "id_pelanggan": "1",
-        "nama_pelanggan": "nata",
-        "alamat": "bangli1",
-        "id_meter": "451",
-        "no_meter": "5001",
-        "waktu_pendaftaran": "2018-06-05 03:09:55",
-        "action": "update",
+        "nama_pelanggan": "Pande Natayasa",
+        "alamat": "jl. Giri Kencana, no 9",
+        "id_meter": "2",
+        "no_meter": "35246363",
+        "waktu_pendaftaran": "2018-06-05 02:16:52",
+        "action": "insert",
         "run": "1"
     },
     {
         "id_pelanggan": "2",
-        "nama_pelanggan": "fcfn",
-        "alamat": "vn n",
-        "id_meter": "0",
-        "no_meter": "c nb",
-        "waktu_pendaftaran": "None",
+        "nama_pelanggan": "Pradipta Agus",
+        "alamat": "Klungkung",
+        "id_meter": "1",
+        "no_meter": "1234567890",
+        "waktu_pendaftaran": "2018-06-05 02:17:20",
+        "action": "insert",
+        "run": "1"
+    },
+    {
+        "id_pelanggan": "3",
+        "nama_pelanggan": "Bayu Bahari",
+        "alamat": "Badung",
+        "id_meter": "2",
+        "no_meter": "123456781234",
+        "waktu_pendaftaran": "2018-06-05 02:17:46",
         "action": "insert",
         "run": "1"
     }

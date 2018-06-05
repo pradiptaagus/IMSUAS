@@ -43,7 +43,7 @@ def insertJson(id_transaksi, id_pelanggan, no_token, id_strom, jumlah_strom, jum
 		json.dump(data + list_data, file, indent=4)
 
 # function untuk mengunggah file json dari drive local 
-# function ini dapat digunakan untuk mengunggah file json dari PLN maupun Indomaret
+# funct87ion ini dapat digunakan untuk mengunggah file json dari PLN maupun Indomaret
 # Gunakan function ini saja untuk menghemat penulisan code E:/Dokument Semester 4/Integrasi dan Migrasi Sistem/Project Akhir/IMSUAS/Engine
 def uploadJson(local_file, dropbox_file):
 	dropbox_access_token = dropbox.Dropbox("9Em04orxhVAAAAAAAAAAEkWTQhZXnfIGW44R7Yz9i6QSpfRaKxt4lR2hrq6IUtXr")
@@ -131,12 +131,12 @@ def cekIUD(transaksi,con,cur):
 		print("Cek update pada tabel transaksi " + transaksi + "..")
 		for i in range(1, jumlah_data+1):
 			# Melakukan select concat pada tabel transaksi PLN
-			sql = "SELECT CONCAT(id_transaksi, ' ', id_pelanggan, ' ', no_token, ' ', id_strom, ' ', jumlah_strom, ' ', jumlah_pembayaran, ' ', waktu_pembelian, ' ') AS data_pln FROM tb_transaksi WHERE tb_transaksi.id_transaksi = %s"  % i
+			sql = "SELECT CONCAT(id_transaksi, ' ', id_pelanggan, ' ', no_token, ' ', id_strom, ' ', jumlah_strom, ' ', jumlah_pembayaran, ' ', waktu_pembelian, ' ') AS data_pln FROM tb_transaksi WHERE tb_transaksi.id_transaksi = %s"  % data[i-1][0]
 			cur.execute(sql)
 			record = cur.fetchone()
 
 			# Melakukan select concat pada tabel transaksi temp PLN
-			sql = "SELECT CONCAT(id_transaksi, ' ', id_pelanggan, ' ', no_token, ' ', id_strom, ' ', jumlah_strom, ' ', jumlah_pembayaran, ' ', waktu_pembelian, ' ') AS data_pln_temp FROM tb_transaksi_temp WHERE tb_transaksi_temp.id_transaksi = %s"  % i
+			sql = "SELECT CONCAT(id_transaksi, ' ', id_pelanggan, ' ', no_token, ' ', id_strom, ' ', jumlah_strom, ' ', jumlah_pembayaran, ' ', waktu_pembelian, ' ') AS data_pln_temp FROM tb_transaksi_temp WHERE tb_transaksi_temp.id_transaksi = %s"  % data[i-1][0]
 			cur.execute(sql)
 			record_temp = cur.fetchone()
 

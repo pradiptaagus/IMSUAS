@@ -127,12 +127,12 @@ def cekIUD(transaksi,con,cur):
 		for i in range(0, jumlah_data):
 			a = i + 1
 			# Melakukan select concat pada tabel transaksi PLN
-			sql = "SELECT CONCAT(id_strom,' ', jumlah_pembayaran, ' ', jumlah_strom, ' ') AS data_pln FROM tb_strom WHERE tb_strom.id_strom = %s"  % a
+			sql = "SELECT CONCAT(id_strom,' ', jumlah_pembayaran, ' ', jumlah_strom, ' ') AS data_pln FROM tb_strom WHERE tb_strom.id_strom = %s"  % data[i][0]
 			cur.execute(sql)
 			record = cur.fetchone()
 
 			# Melakukan select concat pada tabel transaksi temp PLN
-			sql = "SELECT CONCAT(id_strom,' ', jumlah_pembayaran, ' ', jumlah_strom, ' ') AS data_pln_temp FROM tb_strom_temp WHERE tb_strom_temp.id_strom = %s"  % a
+			sql = "SELECT CONCAT(id_strom,' ', jumlah_pembayaran, ' ', jumlah_strom, ' ') AS data_pln_temp FROM tb_strom_temp WHERE tb_strom_temp.id_strom = %s"  % data[i][0]
 			cur.execute(sql)
 			record_temp = cur.fetchone()
 
